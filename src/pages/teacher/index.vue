@@ -23,6 +23,7 @@
           <v-avatar
             :image="userInfo.picture"
             class="mx-2"
+            @click.shift="alertUserName"
           />
         </template>
       </v-list-item>
@@ -89,11 +90,16 @@
           </template>
           <v-list>
             <v-list-item
+              v-if="isSimplifiedStudyDomain"
+              @click="router.push(`/teacher/opt-out`)"
+              append-icon="fa-solid fa-person-walking-arrow-right"
+              :title="t('opt-out')"
+            />
+            <v-list-item
               @click="logout"
               append-icon="fa-solid fa-arrow-right-from-bracket"
               :title="t('log-out')"
-            >
-            </v-list-item>
+            />
           </v-list>
         </v-menu>
       </template>
@@ -140,15 +146,18 @@
 
 <script setup>
   import { ref, reactive, computed } from 'vue'
+  import { useRouter } from 'vue-router'
   import { useStore } from 'vuex'
   import Navbar from '../Navbar.vue'
   import TeacherAgreement from './teacher-agreement.vue'
   import RoleRequester from '../../components/roles/requester.vue'
   import { TRAINER_TAG, SIMPLIFIED_STUDY_DOMAINS } from '../../constants.js'
 
-  const showCreate = !SIMPLIFIED_STUDY_DOMAINS.includes(window.location.host)
+  const isSimplifiedStudyDomain = SIMPLIFIED_STUDY_DOMAINS.includes(window.location.host)
+  const showCreate = !isSimplifiedStudyDomain
 
   const store = useStore()
+  const router = useRouter()
   const hideStudies = true
   const tab = ref('classes')
   const userInfo = ref({})
@@ -177,6 +186,8 @@
   })
 
   function t(slug) { return store.getters.t(slug) }
+
+  function alertUserName() { alert(store.state.user )}
 
   function logout() { Agent.logout() }
 

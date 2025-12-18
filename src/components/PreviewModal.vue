@@ -2,6 +2,7 @@
   <PILAModal
     @close="$emit('close')"
     showCloseButton
+    :closeButtonText="t('close')"
     :width="width"
     :height="height"
   >
@@ -16,6 +17,7 @@
         style="position: absolute;"
         namespace="preview"
         @close="$emit('close')"
+        :environmentProxy="addPreviewVariable"
         allow="camera;microphone;fullscreen"
       />
     </template>
@@ -25,7 +27,10 @@
 <script>
   import { vueScopeComponent, vueEmbedComponent } from '@knowlearning/agents/vue.js'
   import URL_CONTENT_DATA from '../url-content-data.js'
+  import studyEnvironmentVariableProxy from '../study-environment-variable-proxy.js'
   import PILAModal from './PILAModal.vue'
+
+  let varProxy
 
   export default {
     props: {
@@ -39,13 +44,20 @@
         default: '90vh'
       }
     },
+    created() {
+      varProxy = studyEnvironmentVariableProxy({ PREVIEW: true })
+    },
     components: {
       PILAModal,
       vueScopeComponent,
       vueEmbedComponent
     },
     methods: {
-      t(slug) { return this.$store.getters.t(slug) }
+      t(slug) { return this.$store.getters.t(slug) },
+      async addPreviewVariable(e) {
+        const fn = await varProxy
+        return fn(e)
+      }
     },
     computed: {
       URL_CONTENT_DATA() {

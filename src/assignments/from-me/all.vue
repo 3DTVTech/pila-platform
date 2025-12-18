@@ -16,6 +16,7 @@
         </div>
 
         <v-data-table
+          :no-data-text="t('no-data-available')"
           :headers="headers"
           :items="assignmentsForActiveTable"
           :items-per-page="-1"
@@ -124,7 +125,7 @@
               <IconButton
                 icon="dashboard"
                 @click="showResultsModal = true"
-                :text="t('live-monitoring-dashboard')"
+                :text="assignmentContainsBetty || assignmentContainsGenAI ? t('activity-dashboard') : t('live-monitoring-dashboard')"
                 background="#FFC442"
               />
               <br v-if="assignmentContainsCandli">
@@ -188,19 +189,23 @@
   <PILAModal
     v-if="showResultsModal"
     @close="showResultsModal = false"
+    :closeButtonText="t('close')"
     showCloseButton
     width="90vw"
     height="90vh"
   >
     <template v-slot:title>
       <span>
-        {{ t('live-monitoring-dashboard') }} -
+        {{ assignmentContainsBetty || assignmentContainsGenAI ? t('activity-dashboard') : t('live-monitoring-dashboard') }} -
         <vueScopeComponent :id="current" :path="['name']" />
       </span>
     </template>
     <template v-slot:body>
       <suspense>
-        <Dashboard :assignment="current" />
+        <Dashboard
+          :assignment="current"
+          :url="dashboardUrl"
+        />
       </suspense>
     </template>
   </PILAModal>
@@ -208,6 +213,7 @@
     v-if="showCandliResultsModal"
     @close="showCandliResultsModal = false"
     showCloseButton
+    :closeButtonText="t('close')"
     width="90vw"
     height="90vh"
   >
@@ -229,6 +235,7 @@
     v-if="showGenAIDashboardModal"
     @close="showGenAIDashboardModal = false"
     showCloseButton
+    :closeButtonText="t('close')"
     width="90vw"
     height="90vh"
   >
@@ -287,8 +294,10 @@
         showResultsModal: false,
         showCandliResultsModal: false,
         assignmentContainsCandli: null,
-        assignmentContainsGenAI: false,
-        showGenAIDashboardModal: false
+        assignmentContainsGenAI: null,
+        assignmentContainsBetty: null,
+        showGenAIDashboardModal: false,
+        dashboardUrl: null
       }
     },
     mounted() {
@@ -345,12 +354,26 @@
       },
       async reassessContents() {
         this.assignmentContainsCandli = null
+        this.assignmentContainsGenAI = null
+        this.assignmentContainsBetty = null
         if (this.current) {
-          Agent
+          await Agent
             .state(this.current)
-            .then(({ content }) => {
+            .then(async ({ content }) => {
+              console.log('CONTENTTT!', content)
               this.assignmentContainsCandli = !!CANDLI_SEQUENCES[content]
               this.assignmentContainsGenAI = !!GEN_AI_SEQUENCES[content]
+
+              if ((await Agent.state(content)).id?.includes('betty')) {
+                this.assignmentContainsBetty = true
+              }
+
+
+
+              if ((await Agent.metadata(content)).domain === 'datawise.accingo.co') {
+                this.dashboardUrl = 'https://datawise.accingo.co/dashboard'
+              }
+              else this.dashboardUrl = null
             })
         }
       },

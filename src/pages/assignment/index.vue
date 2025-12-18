@@ -3,7 +3,8 @@
     <vueEmbedComponent
       :id="assignment.content"
       @close="closeAssignment"
-      :namespace="$route.params.id"
+      :namespace="route.params.id"
+      :environmentProxy="addVariables"
       allow="camera;microphone;fullscreen"
     />
   </div>
@@ -15,34 +16,27 @@
   </div>
 </template>
 
-<script>
-  import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import { vueEmbedComponent } from '@knowlearning/agents/vue.js'
+import studyEnvironmentVariableProxy from '../../study-environment-variable-proxy.js'
 
-  export default {
-    components: {
-      vueEmbedComponent
-    },
-    data() {
-      return {
-        assignment: null,
-        metadata: null
-      }
-    },
-    async created() {
-      const { id } = this.$route.params
-      this.assignment = await Agent.state(id)
-    },
-    methods: {
-      t(slug) { return this.$store.getters.t(slug) },
-      closeAssignment() {
-        Agent.close()
-      }
-    }
-  }
+const route = useRoute()
+const store = useStore()
+
+const { id } = route.params
+const assignment = ref(await Agent.state(id))
+
+const t = slug => store.getters.t(slug)
+const closeAssignment = () => Agent.close()
+
+const addVariables = await studyEnvironmentVariableProxy()
+
 </script>
 
 <style scoped>
-
 .wrapper {
   position: absolute;
   background: white;
@@ -51,5 +45,4 @@
   top: 0;
   left: 0;
 }
-
 </style>

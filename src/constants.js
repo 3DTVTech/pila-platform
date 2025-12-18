@@ -83,14 +83,24 @@ export const MANDATORY_RESOURCES_TAG = "24af6b80-1174-11f0-9b08-0156640831c5"
 export const OPTIONAL_RESOURCES_TAG = "e5e89470-11ab-11f0-bd10-df9c846cb093"
 export const MY_CONTENT_TAG = '86220090-480f-11f0-a2e7-298d7c5ad755'
 
+export const CONTROL_TAG = '41ad5640-ab69-11f0-b8c9-a1d0807d9f84' // Control
+export const TREATMENT_TAG = '472a84d0-ab69-11f0-b8c9-a1d0807d9f84' // Treatment
+export const OPT_OUT_TAG = 'b7589b90-adec-11f0-954c-d1e98d074ab4'  // Opt-Out
+
 export const EXPERT_LIST = [
   'f74e9cb3-2b53-4c85-9b0c-f1d61b032b3f'
 ]
 
+export const TEACHER_RESOURCE_TAGS = '23232650-b37f-11f0-9f12-bdc994eaa5ef'
+
 export const DEFAULT_CODE_LIST = []
 export const DOMAIN_CODE_LISTS = {
   'app.pilaproject.org': [ 'ACCESS', 'PILA23', 'PILA4Learning23!' ],
+  'testing.pilaproject.org': [ 'ACCESS', 'PILA23', 'PILA4Learning23!' ],
   'thailand.pilaproject.org': ['THAI_ACCESS', 'thai_access'],
+  'thailand.pilaproject.org': ['THAI_ACCESS', 'thai_access'],
+  'dev.gforcesolution.com': ['THAI_ACCESS', 'thai_access'],
+  'pila.gforcesolution.com': ['THAI_ACCESS', 'thai_access'],
   'f74e9cb3-2b53-4c85-9b0c-f1d61b032b3f.localhost:9898': ['jason', 'thai_access'],
   'polska-rct-2025.pilaproject.org': ['25-DOSTEP-RCT'],
   'france-rct-2025.pilaproject.org': ['25-ACCES-RCT']
@@ -114,14 +124,17 @@ export const HOST_TO_PARTITION = {
   'app.pilaproject.org': 'PILA',
   'cambodia.pilaproject.org': 'PILA Cambodia',
   'thailand.pilaproject.org': 'PILA Thailand',
+  'dev.gforcesolution.com': 'PILA Thailand Development',
+  'pila.gforcesolution.com': 'PILA Thailand Development',
   'polska-rct-2025.pilaproject.org': 'PILA Poland RCT 2025',
-  'france-rct-2025.pilaproject.org': 'PILA France RCT 2025'
+  'france-rct-2025.pilaproject.org': 'PILA France RCT 2025',
+  'testing.pilaproject.org': 'PILA Testing'
 }
 
 export const SIMPLIFIED_STUDY_DOMAINS = [
   'polska-rct-2025.pilaproject.org',
-  'france-rct-2025.pilaproject.org'
-  //'f74e9cb3-2b53-4c85-9b0c-f1d61b032b3f.localhost:9898'
+  'france-rct-2025.pilaproject.org',
+  // 'f74e9cb3-2b53-4c85-9b0c-f1d61b032b3f.localhost:9898'
 ]
 
 export const HOST_TO_EXTRA_TEACHER_TAGS = {
@@ -136,4 +149,15 @@ export const HOST_TO_EXTRA_TEACHER_TAGS = {
       ]
     }
   ]
+}
+
+export const HOST_TO_FIRST_LOAD_LANGUAGE = {
+  'polska-rct-2025.pilaproject.org': 'pl',
+  'france-rct-2025.pilaproject.org': 'fr',
+  'thailand.pilaproject.org': 'th'
+}
+
+export const HOST_TO_FORCED_ASSIGNMENT_LANGUAGE = {
+  'polska-rct-2025.pilaproject.org': 'pl',
+  'france-rct-2025.pilaproject.org': 'fr'
 }
